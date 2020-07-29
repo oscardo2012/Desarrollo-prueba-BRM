@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Inventario | Comprador</title>
+		<link href="../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
+		<link href="../css/animate.css" rel="stylesheet">
+		<link href="../css/style.css" rel="stylesheet">
+		<link href="../css/plugins/toastr/toastr.min.css" rel="stylesheet">
+		<link href="../css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+		<link href="../css/plugins/dataTables/dataTables.responsive.css" rel="stylesheet">
+		<link href="../css/plugins/dataTables/dataTables.tableTools.min.css" rel="stylesheet">
+		<link href="../css/estilos.css" rel="stylesheet">
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<nav class="navbar-default navbar-static-side" role="navigation">
+				<div class="sidebar-collapse">
+					<ul class="nav" id="side-menu">
+						<li class="nav-header">
+							<div class="dropdown profile-element"> <span>
+									<img alt="image" src="../img/inventario_perfil.jpg" style="width: 100%;"/>
+									</span>
+							</div>
+							<div class="logo-element">
+								IN
+							</div>
+						</li>
+						<li class="active">
+							<a href="index.html">
+								<i class="fa fa-list"></i>
+								<span class="nav-label">Ver inventario</span>
+							</a>
+						</li>
+						<li>
+							<a href="../index.html">
+								<i class="fa fa-sign-out"></i>
+								<span class="nav-label">Cambiar tipo de usuario</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+			<div id="page-wrapper" class="gray-bg">
+				<div class="row border-bottom">
+					<nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+						<div class="navbar-header">
+							<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#">
+								<i class="fa fa-bars"></i>
+							</a>	
+						</div>
+					</nav>
+				</div>
+				<div class="row wrapper border-bottom white-bg page-heading">
+					<div class="col-sm-4">
+						<h2>Inventario</h2>
+						<ol class="breadcrumb">
+							<li>
+								<a href="../index.html">Inventario</a>
+							</li>
+							<li class="active">
+								<strong>Ver inventario</strong>
+							</li>
+						</ol>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-lg-6">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>Inventario actual</h5>
+								<div class="ibox-tools">
+									<a id="btnRefrescarInventario">
+										<i class="fa fa-refresh"></i>
+									</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<table class="table" id="tblInventario">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Nombre</th>
+											<th>Cantidad</th>
+											<th>Número de lote</th>
+											<th>Fecha de vencimiento</th>
+											<th>Precio</th>
+										</tr>
+									</thead>
+									<tbody id="tbodyInventario"></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					
+
+
+
+					<div class="col-lg-6">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>Pedidos</h5>
+								<div class="ibox-tools">
+									<a id="btnRefrescarPedidos">
+										<i class="fa fa-refresh"></i>
+									</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<table class="table" id="tblPedidos">
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Cliente</th>
+											<th>Producto</th>
+											<th>Cantidad</th>
+											<th>Total</th>
+											<th>Fecha del pedido</th>
+											<th>Cancelar pedido</th>
+										</tr>
+									</thead>
+									<tbody id="tbodyPedidos"></tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="footer">
+					<div>
+						<strong>Copyright</strong> Oscar Espinosa &copy; 2020
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="modalCargando" class="modal fade" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-sm-12 text-center">
+								<h1>Cargando</h1>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../js/jquery-2.1.1.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="../js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="../js/plugins/toastr/toastr.min.js"></script>
+		<script src="../js/inspinia.js"></script>
+		<script src="../js/plugins/pace/pace.min.js"></script>
+		<script src="../js/plugins/dataTables/jquery.dataTables.js"></script>
+		<script src="../js/plugins/dataTables/dataTables.bootstrap.js"></script>
+		<script src="../js/plugins/dataTables/dataTables.responsive.js"></script>
+		<script src="../js/plugins/dataTables/dataTables.tableTools.min.js"></script>
+		<script src="../js/funciones.js"></script>
+	
+		<script>
+			let jsonProductos = null,
+				jsonPedidos = null;
+			$(document).ready(function(){
+				actualizarInventario();
+				actualizarPedidos();
+				$('#btnRefrescarInventario, #btnRefrescarPedidos').on('click', function(){
+					actualizarPedidos();
+					actualizarInventario();
+				});
+			});
+	
+
+			function actualizarPedidos(){
+				mostrarModalCargando(1);
+				$.ajax({
+					url: URL_API + '/pedidos',
+					method: "GET",
+					dataType: "json",
+					success: function(data){
+						jsonPedidos = data;
+						$("#tblPedidos").DataTable().destroy();
+						$("#tbodyPedidos").empty();
+						if(jsonPedidos.length > 0){
+							for(pedido of data){
+								let nuevaFila = document.createElement('tr'),
+									thId = document.createElement('td'),
+									thCliente = document.createElement('td'),
+									thProducto = document.createElement('td'),
+									thCantidad= document.createElement('td'),
+									thTotal = document.createElement('td'),
+									thFecha = document.createElement('td'),
+									thEliminar = document.createElement('td'),
+									aEliminar = document.createElement('a'),
+									iEliminar = document.createElement('i');
+
+								thId.innerHTML = pedido.pedido_id;
+								thCliente.innerHTML = pedido.cliente.cliente_nombre;
+								thProducto.innerHTML = pedido.producto.producto_nombre;
+								thCantidad.innerHTML = pedido.pedido_cantidad;
+								thTotal.innerHTML = pedido.pedido_total;
+								thFecha.innerHTML = pedido.pedido_fecha;
+
+								iEliminar.classList.add("fa","fa-ban", "text-danger");
+								aEliminar.href = "#";
+								aEliminar.setAttribute("data-id", pedido.pedido_id);
+								$(aEliminar).on("click", function(){
+									eliminarPedido($(this).attr("data-id"));
+								});
+
+								aEliminar.append(iEliminar);
+								thEliminar.append(aEliminar);
+	
+								nuevaFila.appendChild(thId);
+								nuevaFila.appendChild(thCliente);
+								nuevaFila.appendChild(thProducto);
+								nuevaFila.appendChild(thCantidad);
+								nuevaFila.appendChild(thTotal);
+								nuevaFila.appendChild(thFecha);
+								nuevaFila.appendChild(thEliminar);
+								$("#tbodyPedidos").append(nuevaFila);
+							}
+							$('#tblPedidos').dataTable({
+								responsive: true,
+								"dom": 'T<"clear">lfrtip',
+							});
+							mostrarToastr("Pedidos actualizado.");
+						}
+						else{
+							mostrarToastr("No hay pedidos", "Error");
+						}
+						mostrarModalCargando(0);
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						console.error(errorThrown);
+						mostrarToastr("Se ha producido un error.","error")
+						mostrarModalCargando(0);
+					}
+				});
+			}
+
+			function actualizarInventario(){
+				mostrarModalCargando(1);
+				$.ajax({
+					url: URL_API + '/productos',
+					method: "GET",
+					dataType: "json",
+					success: function(data){
+						jsonProductos = data;
+						$("#tblInventario").DataTable().destroy();
+						$("#tbodyInventario").empty();
+						if(jsonProductos.length > 0){
+							for(producto of data){
+								let nuevaFila = document.createElement('tr'),
+									thId = document.createElement('td'),
+									thNombre = document.createElement('td'),
+									thCantidad = document.createElement('td'),
+									thNumLote = document.createElement('td'),
+									thFechaVenc = document.createElement('td'),
+									thPrecio = document.createElement('td');
+
+								thId.innerHTML = producto.producto_id;
+								thNombre.innerHTML = producto.producto_nombre;
+								thCantidad.innerHTML = producto.producto_cantidad;
+								thNumLote.innerHTML = producto.producto_num_lote;
+								thFechaVenc.innerHTML = producto.producto_fecha_vencimiento;
+								thPrecio.innerHTML = producto.producto_precio;
+	
+								nuevaFila.appendChild(thId);
+								nuevaFila.appendChild(thNombre);
+								nuevaFila.appendChild(thCantidad);
+								nuevaFila.appendChild(thNumLote);
+								nuevaFila.appendChild(thFechaVenc);
+								nuevaFila.appendChild(thPrecio);
+								$("#tbodyInventario").append(nuevaFila);
+							}
+							$('#tblInventario').dataTable({
+								responsive: true,
+								"dom": 'T<"clear">lfrtip',
+							});
+							mostrarToastr("Inventario actualizado.");
+						}
+						else{
+							mostrarToastr("Inventario vacío", "Error");
+						}
+						mostrarModalCargando(0);
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						console.error(errorThrown);
+						mostrarToastr("Se ha producido un error.","error")
+						mostrarModalCargando(0);
+					}
+				});
+			}
+		
+			function eliminarPedido(id){
+				mostrarModalCargando(1);
+				$.ajax({
+					url: URL_API + '/pedidos/' + id + '/eliminar',
+					method: "POST",
+					dataType: "json",
+					success: function(data){
+						
+						console.log(data);
+
+						actualizarPedidos();
+						actualizarInventario();
+
+						
+						mostrarModalCargando(0);
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						console.error(errorThrown);
+						mostrarToastr("Se ha producido un error.","error")
+						mostrarModalCargando(0);
+					}
+				});
+			}
+		
+		</script>
+	</body>
+</html>

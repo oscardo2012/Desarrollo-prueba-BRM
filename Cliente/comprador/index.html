@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Inventario | Comprador</title>
+		<link href="../css/bootstrap.min.css" rel="stylesheet">
+		<link href="../font-awesome/css/font-awesome.css" rel="stylesheet">
+		<link href="../css/animate.css" rel="stylesheet">
+		<link href="../css/style.css" rel="stylesheet">
+		<link href="../css/plugins/toastr/toastr.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="../css/estilos.css">
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<nav class="navbar-default navbar-static-side" role="navigation">
+				<div class="sidebar-collapse">
+					<ul class="nav" id="side-menu">
+						<li class="nav-header">
+							<div class="dropdown profile-element"> <span>
+									<img alt="image" src="../img/comprador_perfil.jpg" style="width: 100%;"/>
+									</span>
+							</div>
+							<div class="logo-element">
+								IN
+							</div>
+						</li>
+						<li class="active">
+							<a href="index.html">
+								<i class="fa fa-cart-plus"></i>
+								<span class="nav-label">Nuevo pedido</span>
+							</a>
+						</li>
+						<li>
+							<a href="../index.html">
+								<i class="fa fa-sign-out"></i>
+								<span class="nav-label">Cambiar tipo de usuario</span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+			<div id="page-wrapper" class="gray-bg">
+				<div class="row border-bottom">
+					<nav class="navbar navbar-static-top  " role="navigation" style="margin-bottom: 0">
+						<div class="navbar-header">
+							<a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#">
+								<i class="fa fa-bars"></i>
+							</a>	
+						</div>
+					</nav>
+				</div>
+				<div class="row wrapper border-bottom white-bg page-heading">
+					<div class="col-sm-4">
+						<h2>Nuevo pedido</h2>
+						<ol class="breadcrumb">
+							<li>
+								<a href="../index.html">Comprador</a>
+							</li>
+							<li class="active">
+								<strong>Nuevo pedido</strong>
+							</li>
+						</ol>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-lg-12">
+						<div class="ibox float-e-margins">
+							<div class="ibox-title">
+								<h5>Seleccione el producto que desea comprar.</h5>
+								<div class="ibox-tools">
+									<a href="#" id="btnRefrescarProductos">
+										<i class="fa fa-refresh"></i>
+									</a>
+								</div>
+							</div>
+							<div class="ibox-content">
+								<form id="form_nuevoPedido" class="form-horizontal" action="#">
+									
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Seleccione el cliente</label>
+										<div class="col-sm-10">
+											<select class="form-control m-b" id="slctClientes" name="slctClientes">
+												<option value="-1">Seleccione un cliente</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Seleccione el producto</label>
+										<div class="col-sm-10">
+											<select class="form-control m-b" id="slctProductos" name="slctProductos">
+												<option value="-1">Seleccione un producto</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label class="col-sm-2 control-label">Información del producto:</label>
+										<div class="col-sm-10">
+											<div class="row">
+												<div class="col-md-3">
+													<span class="help-block m-b-none">Cantidad:</span>
+													<input type="text" class="form-control" id="txt_prod_cantidad" readonly>
+												</div>
+												<div class="col-md-3">
+													<span class="help-block m-b-none">Lote:</span>
+													<input type="text" class="form-control" id="txt_prod_lote" readonly>
+												</div>
+												<div class="col-md-3">
+													<span class="help-block m-b-none">Fecha vencimiento:</span>
+													<input type="text" class="form-control" id="txt_prod_vencimiento" readonly>
+												</div>
+												<div class="col-md-3">
+													<span class="help-block m-b-none">Precio:</span>
+													<input type="text" class="form-control" id="txt_prod_precio" readonly>
+												</div>
+											</div>
+										</div>
+									</div>
+									
+									<div class="hr-line-dashed"></div>
+								
+									<div class="form-group">
+										<div class="col-sm-4 col-sm-offset-2">
+											<div class="input-group">
+												<input type="text" class="form-control numerosSinDecimal" id="txt_cantidad" disabled>
+												<span class="input-group-btn">
+													<button type="button" class="btn btn-primary" id="btnComprar" disabled>Comprar</button>
+												</span>
+											</div>
+											<span class="help-block m-b-none">Valor: $<span id="spnValor">0</span></span>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="footer">
+					<div>
+						<strong>Copyright</strong> Oscar Espinosa &copy; 2020
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="modalCargando" class="modal fade" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-sm-12 text-center">
+								<h1>Cargando</h1>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="../js/jquery-2.1.1.js"></script>
+		<script src="../js/bootstrap.min.js"></script>
+		<script src="../js/plugins/metisMenu/jquery.metisMenu.js"></script>
+		<script src="../js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+		<script src="../js/plugins/toastr/toastr.min.js"></script>
+		<script src="../js/inspinia.js"></script>
+		<script src="../js/plugins/pace/pace.min.js"></script>
+		<script src="../js/funciones.js"></script>
+	
+		<script>
+			let jsonProductos = null
+				jsonClientes = null;
+			$(document).ready(function(){
+				actualizarListaClientes();
+				actualizarListaProductos();
+
+				$("#slctProductos").on('change',function(){
+					for(producto of jsonProductos){
+						if(producto.producto_id == $(this).val()){
+							$("#txt_prod_cantidad").val(producto.producto_cantidad);
+							$("#txt_prod_lote").val(producto.producto_num_lote);
+							$("#txt_prod_vencimiento").val(producto.producto_fecha_vencimiento);
+							$("#txt_prod_precio").val(producto.producto_precio);
+							$("#spnValor").html("0");
+							if(producto.producto_cantidad > 0){
+								$("#txt_cantidad").val("").removeAttr('disabled');
+								$("#btnComprar").removeAttr('disabled');
+							}
+							else{
+								mostrarToastr("No hay disponibilidad de inventario para este producto", "error");
+								$("#txt_cantidad").val("").attr('disabled', 1);
+								$("#btnComprar").attr('disabled', 1);
+							}
+							
+							break;
+						}
+					}
+				});
+
+				$("#txt_cantidad").on('input', function(){
+					$('.has-error').removeClass('has-error');
+					if(parseInt($(this).val()) > parseInt($("#txt_prod_cantidad").val())){
+						mostrarToastr("La cantidad no es válida","error");
+						$(this).parent().parent().addClass('has-error');
+						$("#spnValor").html("ERROR");
+						$("#btnComprar").attr('disabled',1).addClass("btn-danger");
+					}
+					else{
+						let total = parseFloat($("#txt_prod_precio").val()) * parseInt($(this).val());
+						$("#spnValor").html(total);
+						$("#btnComprar").removeAttr('disabled').removeClass("btn-danger");
+					}
+				});
+
+				$('#btnRefrescarProductos').on('click', function(){
+					actualizarListaClientes();
+					actualizarListaProductos();
+				});
+			
+				$("#btnComprar").on('click', comprarProducto);
+			
+			});
+	
+			function comprarProducto(){
+				let errores = false;
+				$("#btnComprar").attr("disabled", 1);
+				$('.has-error').removeClass('has-error');
+
+				if($("#txt_cantidad").val().trim() == ""){
+					$("#txt_cantidad").parent().parent().addClass("has-error");
+					errores = true;
+				}
+
+				if($("#slctClientes").val() <= 0){
+					$("#slctClientes").parent().parent().addClass("has-error");
+					errores = true;
+				}
+				
+				if(errores){
+					$("#btnComprar").addClass("btn-danger");
+					mostrarToastr("Verifique los campos en rojo", "error", "Datos no válidos");
+				}
+				else{
+					mostrarModalCargando(1);
+					let datosEnviar = {
+							producto: $("#slctProductos").val(),
+							cantidad: $("#txt_cantidad").val().trim(),
+							cliente: $("#slctClientes").val()
+						};
+					$.ajax({
+					url: URL_API + "/productos/comprar",
+					method: "POST",
+					dataType: "json",
+					data: datosEnviar,
+					success: function(data){
+						if(typeof data["exito-codigo"] !== "undefined"){
+							mostrarToastr(data["exito-mensaje"]);
+							actualizarListaProductos();
+						}
+						else{
+							mostrarToastr(data["error-mensaje"],"error");
+						}
+						mostrarModalCargando(0);
+						$("#btnComprar").removeAttr("disabled");
+						
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						console.error(errorThrown);
+						mostrarToastr("Se ha producido un error.","error");
+						mostrarModalCargando(0);
+						$("#btnComprar").removeAttr("disabled");
+					}
+				});
+				}
+				
+			}
+
+			function limpiarFormulario(){
+				$('.has-error').removeClass('has-error');
+				$("#slctClientes").val("-1");
+				$("#slctProductos").val("-1");
+				$("#txt_prod_cantidad").val("");
+				$("#txt_prod_lote").val("");
+				$("#txt_prod_vencimiento").val("");
+				$("#txt_prod_precio").val("");
+				$("#spnValor").html("0");
+				$("#txt_cantidad").val("").attr('disabled',1);
+				$("#btnComprar").attr('disabled',1);
+			}
+
+			function actualizarListaClientes(){
+				mostrarModalCargando(1);
+				$.ajax({
+					url: URL_API + '/clientes',
+					method: "GET",
+					dataType: "json",
+					success: function(data){
+						jsonClientes = data;
+						if(jsonClientes.length == 0){
+							mostrarToastr("No hay clientes registrados.","error");
+						}
+						else{
+							$("#slctClientes").empty();
+							let opcionVacia = document.createElement("option");
+							opcionVacia.value = "-1";
+							opcionVacia.innerHTML = "Seleccione un cliente";
+							$("#slctClientes").append(opcionVacia);
+							for(cliente of data){
+								let nuevaOpcion = document.createElement('option');
+								nuevaOpcion.value = cliente.cliente_id;
+								nuevaOpcion.innerHTML = cliente.cliente_nombre;
+								$("#slctClientes").append(nuevaOpcion);
+							}
+							mostrarToastr("Lista de clientes actualizada.");
+							if(jsonProductos.length > 0 && $("#slctProductos").val() > 0){
+								$("#txt_cantidad").val("").removeAttr('disabled');
+								$("#btnComprar").removeAttr('disabled');
+							}
+						}
+						mostrarModalCargando(0);
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						console.error(errorThrown);
+						mostrarToastr("Se ha producido un error.","error");
+						mostrarModalCargando(0);
+					}
+				});
+			}
+
+			function actualizarListaProductos(){
+				limpiarFormulario();
+				mostrarModalCargando(1);
+				$.ajax({
+					url: URL_API + '/productos',
+					method: "GET",
+					dataType: "json",
+					success: function(data){
+						jsonProductos = data;
+						if(jsonProductos.length == 0){
+							mostrarToastr("No hay productos disponibles","error")
+						}
+						else{
+							$("#slctProductos").empty();
+							let opcionVacia = document.createElement("option");
+							opcionVacia.value = "-1";
+							opcionVacia.innerHTML = "Seleccione un producto";
+							$("#slctProductos").append(opcionVacia);
+							for(producto of data){
+								let nuevaOpcion = document.createElement('option');
+								nuevaOpcion.value = producto.producto_id;
+								nuevaOpcion.innerHTML = producto.producto_nombre;
+								$("#slctProductos").append(nuevaOpcion);
+							}
+							mostrarToastr("Lista de productos actualizada.");
+						}
+						mostrarModalCargando(0);
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						console.error(errorThrown);
+						mostrarToastr("Se ha producido un error.","error");
+						mostrarModalCargando(0);
+					}
+				});
+			}
+		</script>
+	</body>
+</html>

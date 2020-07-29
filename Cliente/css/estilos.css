@@ -1,0 +1,8 @@
+#toast-container > div.toast {
+    background-image: none !important;
+}
+
+
+option[value="-1"]{
+    display: none;
+}
